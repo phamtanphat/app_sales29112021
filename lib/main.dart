@@ -1,3 +1,4 @@
+import 'package:app_sales29112021/presentation/features/sign_in/sign_in_screen.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -13,7 +14,10 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: Container()
+      routes: {
+        "/sign-in" : (context) => SignInScreen()
+      },
+      initialRoute: "/sign-in",
     );
   }
 }
