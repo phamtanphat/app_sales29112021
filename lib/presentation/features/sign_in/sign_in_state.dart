@@ -11,16 +11,35 @@ class SignInStateInit extends SignInStateBase{
   List<Object?> get props => [];
 
 }
+class SignInLoading extends SignInStateBase{
 
-class SignInResult extends SignInStateBase{
+  @override
+  List<Object?> get props => [];
 
-  late ResourceType<UserModel> result;
+}
 
-  SignInResult(ResourceType<UserModel> result ){
-    this.result = result;
+class SignInSuccess extends SignInStateBase{
+
+  late String message;
+
+  SignInSuccess(String message){
+    this.message = message;
   }
 
   @override
-  List<Object?> get props => [result];
+  List<Object?> get props => [message];
+
+}
+
+class SignInError extends SignInStateBase{
+
+  late String message;
+
+  SignInError(String message){
+    this.message = message;
+  }
+
+  @override
+  List<Object?> get props => [message];
 
 }
