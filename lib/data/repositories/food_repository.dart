@@ -10,7 +10,7 @@ class FoodRepository{
   }
 
   Future<Response> fetchListFoods(){
-    return _apiRequest.fetchListFoods(email, password);
+    return _apiRequest.fetchListFoods();
   }
 
 }
