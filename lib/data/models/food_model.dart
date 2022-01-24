@@ -1,4 +1,4 @@
-class FooModel {
+class FoodModel {
   String? foodId;
   String? foodName;
   List<Images>? images;
@@ -9,7 +9,7 @@ class FooModel {
   String? createdAt;
   String? updatedAt;
 
-  FooModel(
+  FoodModel(
       {this.foodId,
         this.foodName,
         this.images,
@@ -20,7 +20,7 @@ class FooModel {
         this.createdAt,
         this.updatedAt});
 
-  FooModel.fromJson(Map<String, dynamic> json) {
+  FoodModel.fromJson(Map<String, dynamic> json) {
     foodId = json['foodId'];
     foodName = json['foodName'];
     if (json['images'] != null) {
