@@ -73,6 +73,7 @@ class _SignInContainerWidgetState extends State<SignInContainerWidget> {
         listener: (context, state){
           if(state is SignInSuccess){
             ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(state.message)));
+            Navigator.pushReplacementNamed(context, "/home");
           }
           if(state is SignInError){
             ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(state.message)));

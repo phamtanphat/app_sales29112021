@@ -32,8 +32,8 @@ class _SplashScreenState extends State<SplashScreen> {
                   repeat: true,
                   onLoaded: (complete){
                     Future.delayed(Duration(seconds: 2),() async{
-                      String token = await SharePre.instance.get(AppConstant.token);
-                      if(token.isNotEmpty){
+                      String? token = await SharePre.instance.get(AppConstant.token);
+                      if(token != null && token.isNotEmpty){
                         Navigator.pushReplacementNamed(context, "/home");
                       }else{
                         Navigator.pushReplacementNamed(context, "/sign-in");
