@@ -1,4 +1,12 @@
+import 'package:app_sales29112021/data/datasources/remote/api/authentication_api.dart';
+import 'package:app_sales29112021/data/repositories/authentication_repository.dart';
+import 'package:app_sales29112021/presentation/features/sign_up/sign_up_bloc.dart';
+import 'package:app_sales29112021/presentation/features/sign_up/sign_up_event.dart';
+import 'package:app_sales29112021/presentation/features/sign_up/sign_up_state.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:provider/provider.dart';
+
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({Key? key}) : super(key: key);
 
@@ -13,7 +21,23 @@ class _SignUpScreenState extends State<SignUpScreen> {
       appBar: AppBar(
         title: Text("Register Screen"),
       ),
-      body: SignUpContainer(),
+      body: MultiProvider(providers: [
+        Provider(create: (context) => AuthenticationApi()),
+        ProxyProvider<AuthenticationApi, AuthenticationRepository>(
+          create: (context) =>
+              AuthenticationRepository(context.read<AuthenticationApi>()),
+          update: (context, api, repository) {
+            return AuthenticationRepository(api);
+          },
+        ),
+        ProxyProvider<AuthenticationRepository, SignUpBloc>(
+          create: (context) =>
+              SignUpBloc(context.read<AuthenticationRepository>()),
+          update: (context, repository, bloc) {
+            return SignUpBloc(repository);
+          },
+        ),
+      ], child: SignUpContainer()),
     );
   }
 }
@@ -31,51 +55,75 @@ class _SignUpContainerState extends State<SignUpContainer> {
   final _passController = TextEditingController();
   final _emailController = TextEditingController();
   final _addressController = TextEditingController();
+  late SignUpBloc bloc;
+
+  @override
+  void initState() {
+    super.initState();
+    bloc = context.read<SignUpBloc>();
+  }
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Container(
-        color: Colors.white,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            Expanded(
-                flex: 2, child: Image.asset("assets/images/ic_food_express.png")),
-            Expanded(
-                flex: 4,
-                child: LayoutBuilder(
-                  builder: (context, constraint) {
-                    return SingleChildScrollView(
-                      child: ConstrainedBox(
-                        constraints:
-                        BoxConstraints(minHeight: constraint.maxHeight),
-                        child: IntrinsicHeight(
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              _buildDisplayTextField(),
-                              SizedBox(height: 10),
-                              _buildAddressTextField(),
-                              SizedBox(height: 10),
-                              _buildEmailTextField(),
-                              SizedBox(height: 10),
-                              _buildPhoneTextField(),
-                              SizedBox(height: 10),
-                              _buildPasswordTextField(),
-                              SizedBox(height: 10),
-                              _buildButtonSignUp()
-                            ],
-                          ),
-                        ),
-                      ),
-                    );
-                  },
-                )),
-          ],
-        ),
-      ),
-    );
+    return BlocConsumer<SignUpBloc, SignUpStateBase>(
+        bloc: bloc,
+        listener: (context, state) {
+          if (state is SignUpSuccess) {
+            ScaffoldMessenger.of(context)
+                .showSnackBar(SnackBar(content: Text(state.message)));
+            Navigator.pop(context);
+          }
+          if (state is SignUpError) {
+            ScaffoldMessenger.of(context)
+                .showSnackBar(SnackBar(content: Text(state.message)));
+          }
+        },
+        builder: (context, state) {
+          return SafeArea(
+            child: Container(
+              color: Colors.white,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Expanded(
+                      flex: 2,
+                      child: Image.asset("assets/images/ic_food_express.png")),
+                  Expanded(
+                      flex: 4,
+                      child: LayoutBuilder(
+                        builder: (context, constraint) {
+                          return SingleChildScrollView(
+                            child: ConstrainedBox(
+                              constraints: BoxConstraints(
+                                  minHeight: constraint.maxHeight),
+                              child: IntrinsicHeight(
+                                child: Column(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceEvenly,
+                                  children: [
+                                    _buildDisplayTextField(),
+                                    SizedBox(height: 10),
+                                    _buildAddressTextField(),
+                                    SizedBox(height: 10),
+                                    _buildEmailTextField(),
+                                    SizedBox(height: 10),
+                                    _buildPhoneTextField(),
+                                    SizedBox(height: 10),
+                                    _buildPasswordTextField(),
+                                    SizedBox(height: 10),
+                                    _buildButtonSignUp()
+                                  ],
+                                ),
+                              ),
+                            ),
+                          );
+                        },
+                      )),
+                ],
+              ),
+            ),
+          );
+        });
   }
 
   Widget _buildDisplayTextField() {
@@ -222,15 +270,24 @@ class _SignUpContainerState extends State<SignUpContainer> {
   Widget _buildButtonSignUp() {
     return Container(
       margin: EdgeInsets.only(bottom: 10),
-      child: Center(child:ElevatedButton(
-        onPressed: (){
+      child: Center(
+          child: ElevatedButton(
+        onPressed: () {
           String email = _emailController.text.toString();
           String password = _passController.text.toString();
+          String name = _displayController.text.toString();
+          String phone = _phoneController.text.toString();
+          String address = _addressController.text.toString();
 
+          bloc.add(SignUpEvent(
+              email: email,
+              password: password,
+              name: name,
+              phone: phone,
+              address: address));
         },
         child: Text("Sign Up"),
       )),
     );
   }
 }
-

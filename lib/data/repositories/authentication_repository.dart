@@ -9,6 +9,10 @@ class AuthenticationRepository{
   }
 
   Future<Response> signIn(String email,password){
-    return _apiRequest.signRequestApi(email, password);
+    return _apiRequest.signInRequestApi(email, password);
+  }
+
+  Future<Response> signUp(String email, String password , String address , String phone , String name){
+    return _apiRequest.signUpRequestApi(email, password,address,phone,name);
   }
 }
