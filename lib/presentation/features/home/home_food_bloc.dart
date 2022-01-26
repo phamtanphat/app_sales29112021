@@ -5,10 +5,10 @@ import 'package:app_sales29112021/presentation/features/home/home_state.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class HomeBloc extends Bloc<HomeEventBase,HomeStateBase>{
+class HomeFoodBloc extends Bloc<HomeEventBase,HomeStateBase>{
   late FoodRepository _repository;
 
-  HomeBloc(FoodRepository repository) : super(HomeStateInit()){
+  HomeFoodBloc(FoodRepository repository) : super(HomeStateInit()){
     _repository = repository;
 
     on<FetchListFood>((event, emit) async{
@@ -20,11 +20,14 @@ class HomeBloc extends Bloc<HomeEventBase,HomeStateBase>{
           emit(FetchListFoodSuccess(listFoods: listFoods));
         }
       }on DioError catch(dioError){
-        emit(FetchListFoodError(dioError.response!.data["message"]));
+        if(dioError.response != null){
+          emit(FetchListFoodError(dioError.response!.data["message"]));
+        }
       }catch(e){
         emit(FetchListFoodError(e.toString()));
       }
     });
+
   }
 
 }

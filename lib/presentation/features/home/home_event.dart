@@ -8,7 +8,15 @@ class FetchListFood extends HomeEventBase{
   FetchListFood();
 
   @override
-  // TODO: implement props
+  List<Object?> get props => [];
+
+}
+
+class FetchTotalCart extends HomeEventBase{
+
+  FetchTotalCart();
+
+  @override
   List<Object?> get props => [];
 
 }

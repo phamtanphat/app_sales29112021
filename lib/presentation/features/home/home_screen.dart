@@ -1,9 +1,13 @@
+import 'package:app_sales29112021/data/datasources/remote/api/cart_api.dart';
 import 'package:app_sales29112021/data/datasources/remote/api/food_api.dart';
 import 'package:app_sales29112021/data/models/food_model.dart';
+import 'package:app_sales29112021/data/repositories/cart_repository.dart';
 import 'package:app_sales29112021/data/repositories/food_repository.dart';
-import 'package:app_sales29112021/presentation/features/home/home_bloc.dart';
+import 'package:app_sales29112021/presentation/features/home/home_cart_bloc.dart';
+import 'package:app_sales29112021/presentation/features/home/home_food_bloc.dart';
 import 'package:app_sales29112021/presentation/features/home/home_event.dart';
 import 'package:app_sales29112021/presentation/widgets/loading_widget.dart';
+import 'package:badges/badges.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
@@ -22,16 +26,29 @@ class _HomeScreenState extends State<HomeScreen> {
     return MultiProvider(
       providers: [
         Provider(create: (context) => FoodApi()),
+        Provider(create: (context) => CartApi()),
         ProxyProvider<FoodApi, FoodRepository>(
           create: (context) => FoodRepository(context.read<FoodApi>()),
           update: (context, api, repository) {
             return FoodRepository(api);
           },
         ),
-        ProxyProvider<FoodRepository, HomeBloc>(
-          create: (context) => HomeBloc(context.read<FoodRepository>()),
-          update: (context, repository, bloc) {
-            return HomeBloc(repository);
+        ProxyProvider<CartApi, CartRepository>(
+          create: (context) => CartRepository(context.read<CartApi>()),
+          update: (context, api, repository) {
+            return CartRepository(api);
+          },
+        ),
+        ProxyProvider<FoodRepository, HomeFoodBloc>(
+          create: (context) => HomeFoodBloc(context.read<FoodRepository>()),
+          update: (context, foodRepository, bloc) {
+            return HomeFoodBloc(foodRepository);
+          },
+        ),
+        ProxyProvider<CartRepository, HomeCartBloc>(
+          create: (context) => HomeCartBloc(context.read<CartRepository>()),
+          update: (context, cartRepository, bloc) {
+            return HomeCartBloc(cartRepository);
           },
         ),
       ],
@@ -48,13 +65,16 @@ class HomeScreenContainer extends StatefulWidget {
 }
 
 class _HomeScreenContainerState extends State<HomeScreenContainer> {
-  late HomeBloc bloc;
+  late HomeFoodBloc foodBloc;
+  late HomeCartBloc cartBloc;
 
   @override
   void initState() {
     super.initState();
-    bloc = context.read<HomeBloc>();
-    bloc.add(FetchListFood());
+    foodBloc = context.read<HomeFoodBloc>();
+    cartBloc = context.read<HomeCartBloc>();
+    foodBloc.add(FetchListFood());
+    cartBloc.add(FetchTotalCart());
   }
 
   @override
@@ -62,11 +82,34 @@ class _HomeScreenContainerState extends State<HomeScreenContainer> {
     return Scaffold(
       appBar: AppBar(
         title: Text("Home"),
+        actions: [
+          BlocConsumer<HomeCartBloc,HomeStateBase>(
+            bloc: cartBloc,
+            listener: (context,state){
+              if(state is FetchTotalError){
+                if(state.code == 401){
+                  Navigator.pushReplacementNamed(context, "/sign-in");
+                }
+              }
+            },
+            builder: (context ,state){
+              return InkWell(
+                child: Container(
+                  margin: EdgeInsets.only(right: 10 , top: 10),
+                  child: Badge(
+                    badgeContent: state is FetchTotalSuccess ? Text(state.cartModel.total.toString()) : null,
+                    child: Icon(Icons.settings),
+                  ),
+                ),
+              );
+            },
+          )
+        ],
       ),
       body: SafeArea(
         child: Container(
-          child: BlocConsumer<HomeBloc, HomeStateBase>(
-            bloc: bloc,
+          child: BlocConsumer<HomeFoodBloc, HomeStateBase>(
+            bloc: foodBloc,
             listener: (context, state) {},
             builder: (context, state) {
               if (state is FetchListFoodSuccess) {
@@ -75,11 +118,11 @@ class _HomeScreenContainerState extends State<HomeScreenContainer> {
                     itemBuilder: (context, index) {
                       return _buildItemFood(state.listFoods[index]);
                     });
-              }else if(state is HomeStateLoading){
+              } else if (state is HomeStateLoading) {
                 return Center(child: LoadingWidget());
-              }else if (state is FetchListFoodError){
+              } else if (state is FetchListFoodError) {
                 return Center(child: Text(state.message));
-              }else{
+              } else {
                 return SizedBox();
               }
             },
@@ -131,7 +174,7 @@ class _HomeScreenContainerState extends State<HomeScreenContainer> {
                         },
                         style: ButtonStyle(
                             backgroundColor:
-                            MaterialStateProperty.resolveWith((states) {
+                                MaterialStateProperty.resolveWith((states) {
                               if (states.contains(MaterialState.pressed)) {
                                 return Color.fromARGB(200, 240, 102, 61);
                               } else {
@@ -143,7 +186,7 @@ class _HomeScreenContainerState extends State<HomeScreenContainer> {
                                     borderRadius: BorderRadius.all(
                                         Radius.circular(10))))),
                         child:
-                        Text("Add To Cart", style: TextStyle(fontSize: 14)),
+                            Text("Add To Cart", style: TextStyle(fontSize: 14)),
                       ),
                     ],
                   ),
