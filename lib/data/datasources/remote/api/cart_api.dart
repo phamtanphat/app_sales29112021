@@ -12,4 +12,10 @@ class CartApi{
     return _dio.get("order/count/shopping-cart");
   }
 
+  Future<Response> addToCart(String foodId) {
+    return _dio.post("order/add-to-cart", data: {
+      "foodId": foodId
+    });
+  }
+
 }

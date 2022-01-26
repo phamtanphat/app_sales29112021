@@ -20,3 +20,13 @@ class FetchTotalCart extends HomeEventBase{
   List<Object?> get props => [];
 
 }
+
+class AddToCart extends HomeEventBase{
+  late String foodId;
+
+  AddToCart({required this.foodId});
+
+  @override
+  List<Object?> get props => [foodId];
+
+}

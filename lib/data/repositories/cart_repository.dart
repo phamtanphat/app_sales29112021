@@ -11,4 +11,8 @@ class CartRepository{
   Future<Response> fetchTotalCart(){
     return _api.fetchTotalCart();
   }
+
+  Future<Response> addToCart(String foodId){
+    return _api.addToCart(foodId);
+  }
 }

@@ -183,8 +183,7 @@ class _HomeScreenContainerState extends State<HomeScreenContainer> {
                           style: TextStyle(fontSize: 12)),
                       ElevatedButton(
                         onPressed: () {
-                          // bloc.eventSink
-                          //     .add(HomeEventAddCart(foodId: product.foodId!));
+                          cartBloc.add(AddToCart(foodId: foodModel.foodId!));
                         },
                         style: ButtonStyle(
                             backgroundColor:
