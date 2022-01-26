@@ -88,20 +88,34 @@ class _HomeScreenContainerState extends State<HomeScreenContainer> {
             listener: (context,state){
               if(state is FetchTotalError){
                 if(state.code == 401){
+                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(state.message)));
                   Navigator.pushReplacementNamed(context, "/sign-in");
                 }
               }
             },
             builder: (context ,state){
-              return InkWell(
-                child: Container(
-                  margin: EdgeInsets.only(right: 10 , top: 10),
-                  child: Badge(
-                    badgeContent: state is FetchTotalSuccess ? Text(state.cartModel.total.toString()) : null,
-                    child: Icon(Icons.settings),
+              if(state is FetchTotalSuccess){
+                return InkWell(
+                  child: Container(
+                    margin: EdgeInsets.only(right: 10 , top: 10),
+                    child: Badge(
+                      badgeContent: Text(state.cartModel.total.toString()),
+                      child: Icon(Icons.shopping_cart_outlined),
+                    ),
                   ),
-                ),
-              );
+                );
+              }
+              if (state is FetchTotalError){
+                if(state.code == 404){
+                  return InkWell(
+                    child: Container(
+                      margin: EdgeInsets.only(right: 10 , top: 10),
+                      child: Icon(Icons.shopping_cart_outlined)
+                    ),
+                  );
+                }
+              }
+              return SizedBox();
             },
           )
         ],

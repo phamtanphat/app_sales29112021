@@ -26,7 +26,7 @@ class HomeCartBloc extends Bloc<HomeEventBase,HomeStateBase>{
           if(dioError.response!.statusCode == 401){
             emit(FetchTotalError(dioError.response!.data["message"],401));
           }else if(dioError.response!.statusCode == 404){
-            emit(FetchTotalSuccess(cartModel: CartModel()));
+            emit(FetchTotalError("",404));
           }else{
             emit(FetchTotalError(dioError.response!.data["message"],dioError.response!.statusCode!));
           }
