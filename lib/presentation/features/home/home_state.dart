@@ -1,5 +1,5 @@
 import 'package:app_sales29112021/data/datasources/remote/resource_type.dart';
-import 'package:app_sales29112021/data/models/cart_model.dart';
+import 'package:app_sales29112021/data/models/order_model.dart';
 import 'package:app_sales29112021/data/models/food_model.dart';
 import 'package:app_sales29112021/data/models/user_model.dart';
 import 'package:equatable/equatable.dart';
@@ -46,7 +46,7 @@ class FetchListFoodError extends HomeStateBase{
 
 class FetchTotalSuccess extends HomeStateBase{
 
-  late CartModel cartModel;
+  late OrderModel cartModel;
 
   FetchTotalSuccess({required this.cartModel});
 

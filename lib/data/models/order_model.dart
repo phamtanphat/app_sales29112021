@@ -1,10 +1,10 @@
-class CartModel{
+class OrderModel{
   String? orderId;
   int? total;
 
-  CartModel();
+  OrderModel();
 
-  CartModel.fromJson(Map<String,dynamic> json){
+  OrderModel.fromJson(Map<String,dynamic> json){
     orderId = json['orderId'];
     total = json['total'];
   }

@@ -1,9 +1,9 @@
-import 'package:app_sales29112021/data/datasources/remote/api/cart_api.dart';
+import 'package:app_sales29112021/data/datasources/remote/api/order_api.dart';
 import 'package:app_sales29112021/data/datasources/remote/api/food_api.dart';
 import 'package:app_sales29112021/data/models/food_model.dart';
-import 'package:app_sales29112021/data/repositories/cart_repository.dart';
+import 'package:app_sales29112021/data/repositories/order_repository.dart';
 import 'package:app_sales29112021/data/repositories/food_repository.dart';
-import 'package:app_sales29112021/presentation/features/home/home_cart_bloc.dart';
+import 'package:app_sales29112021/presentation/features/home/home_order_bloc.dart';
 import 'package:app_sales29112021/presentation/features/home/home_food_bloc.dart';
 import 'package:app_sales29112021/presentation/features/home/home_event.dart';
 import 'package:app_sales29112021/presentation/widgets/loading_widget.dart';
@@ -26,17 +26,17 @@ class _HomeScreenState extends State<HomeScreen> {
     return MultiProvider(
       providers: [
         Provider(create: (context) => FoodApi()),
-        Provider(create: (context) => CartApi()),
+        Provider(create: (context) => OrderApi()),
         ProxyProvider<FoodApi, FoodRepository>(
           create: (context) => FoodRepository(context.read<FoodApi>()),
           update: (context, api, repository) {
             return FoodRepository(api);
           },
         ),
-        ProxyProvider<CartApi, CartRepository>(
-          create: (context) => CartRepository(context.read<CartApi>()),
+        ProxyProvider<OrderApi, OrderRepository>(
+          create: (context) => OrderRepository(context.read<OrderApi>()),
           update: (context, api, repository) {
-            return CartRepository(api);
+            return OrderRepository(api);
           },
         ),
         ProxyProvider<FoodRepository, HomeFoodBloc>(
@@ -45,10 +45,10 @@ class _HomeScreenState extends State<HomeScreen> {
             return HomeFoodBloc(foodRepository);
           },
         ),
-        ProxyProvider<CartRepository, HomeCartBloc>(
-          create: (context) => HomeCartBloc(context.read<CartRepository>()),
+        ProxyProvider<OrderRepository, HomeOrderBloc>(
+          create: (context) => HomeOrderBloc(context.read<OrderRepository>()),
           update: (context, cartRepository, bloc) {
-            return HomeCartBloc(cartRepository);
+            return HomeOrderBloc(cartRepository);
           },
         ),
       ],
@@ -66,13 +66,13 @@ class HomeScreenContainer extends StatefulWidget {
 
 class _HomeScreenContainerState extends State<HomeScreenContainer> {
   late HomeFoodBloc foodBloc;
-  late HomeCartBloc cartBloc;
+  late HomeOrderBloc cartBloc;
 
   @override
   void initState() {
     super.initState();
     foodBloc = context.read<HomeFoodBloc>();
-    cartBloc = context.read<HomeCartBloc>();
+    cartBloc = context.read<HomeOrderBloc>();
     foodBloc.add(FetchListFood());
     cartBloc.add(FetchTotalCart());
   }
@@ -83,7 +83,7 @@ class _HomeScreenContainerState extends State<HomeScreenContainer> {
       appBar: AppBar(
         title: Text("Home"),
         actions: [
-          BlocConsumer<HomeCartBloc,HomeStateBase>(
+          BlocConsumer<HomeOrderBloc,HomeStateBase>(
             bloc: cartBloc,
             listener: (context,state){
               if(state is FetchTotalError){

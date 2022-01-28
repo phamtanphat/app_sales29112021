@@ -1,10 +1,10 @@
 import 'package:app_sales29112021/common/dio_client.dart';
 import 'package:dio/dio.dart';
 
-class CartApi{
+class OrderApi{
   late Dio _dio;
 
-  CartApi() {
+  OrderApi() {
     _dio = DioClient.instance.dio;
   }
 
