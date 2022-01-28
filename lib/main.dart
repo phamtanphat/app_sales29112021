@@ -1,3 +1,4 @@
+import 'package:app_sales29112021/presentation/features/cart/cart_screen.dart';
 import 'package:app_sales29112021/presentation/features/home/home_screen.dart';
 import 'package:app_sales29112021/presentation/features/sign_in/sign_in_screen.dart';
 import 'package:app_sales29112021/presentation/features/sign_up/sign_up_screen.dart';
@@ -14,6 +15,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter Demo',
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
@@ -22,6 +24,7 @@ class MyApp extends StatelessWidget {
         "/sign-up" : (context) => SignUpScreen(),
         "/home" : (context) => HomeScreen(),
         "/splash" : (context) => SplashScreen(),
+        "/cart" : (context) => CartScreen(),
       },
       initialRoute: "/splash",
     );

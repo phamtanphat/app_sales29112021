@@ -96,6 +96,9 @@ class _HomeScreenContainerState extends State<HomeScreenContainer> {
             builder: (context ,state){
               if(state is FetchTotalSuccess){
                 return InkWell(
+                  onTap: (){
+                    Navigator.pushNamed(context, '/cart');
+                  },
                   child: Container(
                     margin: EdgeInsets.only(right: 10 , top: 10),
                     child: Badge(
@@ -108,6 +111,9 @@ class _HomeScreenContainerState extends State<HomeScreenContainer> {
               if (state is FetchTotalError){
                 if(state.code == 404){
                   return InkWell(
+                    onTap: (){
+                      Navigator.pushNamed(context, '/cart');
+                    },
                     child: Container(
                       margin: EdgeInsets.only(right: 10 , top: 10),
                       child: Icon(Icons.shopping_cart_outlined)
