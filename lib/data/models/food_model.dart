@@ -4,6 +4,7 @@ class FoodModel {
   List<Images>? images;
   String? description;
   int? price;
+  int? quantity;
   String? cateId;
   String? cateName;
   String? createdAt;
@@ -18,6 +19,7 @@ class FoodModel {
         this.cateId,
         this.cateName,
         this.createdAt,
+        this.quantity,
         this.updatedAt});
 
   FoodModel.fromJson(Map<String, dynamic> json) {
@@ -31,6 +33,7 @@ class FoodModel {
     }
     description = json['description'];
     price = json['price'];
+    quantity = json['quantity'];
     cateId = json['cateId'];
     cateName = json['cateName'];
     createdAt = json['createdAt'];
@@ -46,6 +49,7 @@ class FoodModel {
     }
     data['description'] = this.description;
     data['price'] = this.price;
+    data['quantity'] = this.quantity;
     data['cateId'] = this.cateId;
     data['cateName'] = this.cateName;
     data['createdAt'] = this.createdAt;
