@@ -32,5 +32,22 @@ class FetchCartError extends CartStateBase{
 
   @override
   List<Object?> get props => [message];
+}
 
+class UpdateCartSuccess extends CartStateBase{
+
+  UpdateCartSuccess();
+
+  @override
+  List<Object?> get props => [];
+
+}
+
+class UpdateCartError extends CartStateBase{
+  late String message;
+
+  UpdateCartError({required this.message});
+
+  @override
+  List<Object?> get props => [message];
 }

@@ -50,12 +50,19 @@ class CartScreenContainer extends StatefulWidget {
 class _CartScreenContainerState extends State<CartScreenContainer> {
 
   late CartBloc bloc;
+  late String orderId;
 
   @override
   void initState() {
     super.initState();
     bloc = context.read<CartBloc>();
     bloc.add(FetchListCart());
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    orderId = ModalRoute.of(context)!.settings.arguments as String;
   }
 
   @override
@@ -69,7 +76,9 @@ class _CartScreenContainerState extends State<CartScreenContainer> {
           child: BlocConsumer<CartBloc,CartStateBase>(
             bloc: bloc,
             listener: (context ,state){
-
+              if(state is UpdateCartSuccess){
+                bloc.add(FetchListCart());
+              }
             },
             builder: (context, state) {
               if(state is FetchCartSuccess){
@@ -163,7 +172,7 @@ Widget _buildItem(FoodModel foodModel, BuildContext context) {
                       children: [
                         ElevatedButton(
                           onPressed: () {
-
+                            bloc.add(UpdateCart(orderId: orderId, foodId: foodModel.foodId!, quantity: foodModel.quantity! - 1));
                           },
                           child: Text("-"),
                         ),

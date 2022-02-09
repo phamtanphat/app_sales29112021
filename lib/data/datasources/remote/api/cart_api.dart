@@ -11,4 +11,12 @@ class CartApi{
   Future<Response> fetchListCart() {
     return _dio.get("order/shopping-cart");
   }
+
+  Future<Response> updateItemCart(String orderId , String foodId , int quantity) {
+    return _dio.post("order/update", data: {
+      "orderId": orderId,
+      "foodId": foodId,
+      "quantity": quantity
+    });
+  }
 }

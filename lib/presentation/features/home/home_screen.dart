@@ -97,7 +97,7 @@ class _HomeScreenContainerState extends State<HomeScreenContainer> {
               if(state is FetchTotalSuccess){
                 return InkWell(
                   onTap: (){
-                    Navigator.pushNamed(context, '/cart');
+                    Navigator.pushNamed(context, '/cart' , arguments: state.cartModel.orderId);
                   },
                   child: Container(
                     margin: EdgeInsets.only(right: 10 , top: 10),

@@ -13,4 +13,8 @@ class CartRepository{
     return _api.fetchListCart();
   }
 
+  Future<Response> updateItemCart(String orderId , String foodId , int quantity){
+    return _api.updateItemCart(orderId , foodId , quantity);
+  }
+
 }
