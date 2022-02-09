@@ -22,3 +22,14 @@ class UpdateCart extends CartEventBase {
   List<Object?> get props => [orderId, foodId, quantity];
 
 }
+
+class DeleteItemCart extends CartEventBase {
+
+  late String foodId;
+
+  DeleteItemCart({required this.foodId});
+
+  @override
+  List<Object?> get props => [foodId];
+
+}

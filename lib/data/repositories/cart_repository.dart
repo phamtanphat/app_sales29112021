@@ -17,4 +17,8 @@ class CartRepository{
     return _api.updateItemCart(orderId , foodId , quantity);
   }
 
+  Future<Response> deleteItemCart(String foodId){
+    return _api.deleteItemCart(foodId);
+  }
+
 }

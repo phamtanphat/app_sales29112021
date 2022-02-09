@@ -172,7 +172,9 @@ Widget _buildItem(FoodModel foodModel, BuildContext context) {
                       children: [
                         ElevatedButton(
                           onPressed: () {
-                            bloc.add(UpdateCart(orderId: orderId, foodId: foodModel.foodId!, quantity: foodModel.quantity! - 1));
+                            if (foodModel.quantity! > 1 ){
+                              bloc.add(UpdateCart(orderId: orderId, foodId: foodModel.foodId!, quantity: foodModel.quantity! - 1));
+                            }
                           },
                           child: Text("-"),
                         ),
@@ -183,7 +185,8 @@ Widget _buildItem(FoodModel foodModel, BuildContext context) {
                         ),
                         ElevatedButton(
                           onPressed: () {
-                           },
+                            bloc.add(UpdateCart(orderId: orderId, foodId: foodModel.foodId!, quantity: foodModel.quantity! + 1));
+                          },
                           child: Text("+"),
                         ),
                       ],
@@ -196,6 +199,7 @@ Widget _buildItem(FoodModel foodModel, BuildContext context) {
               child: IconButton(
                 icon: Icon(Icons.delete , color: Colors.red,),
                 onPressed: (){
+                  bloc.add(DeleteItemCart(foodId: foodModel.foodId!));
                 },
               ),
             ),

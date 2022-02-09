@@ -19,4 +19,10 @@ class CartApi{
       "quantity": quantity
     });
   }
+
+  Future<Response> deleteItemCart(String foodId) {
+    return _dio.delete("order/delete", data: {
+      "foodId": foodId,
+    });
+  }
 }
