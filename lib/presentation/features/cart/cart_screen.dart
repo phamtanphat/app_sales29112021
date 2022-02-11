@@ -77,13 +77,12 @@ class _CartScreenContainerState extends State<CartScreenContainer> {
           child: BlocConsumer<CartBloc,CartState>(
             bloc: bloc,
             listener: (context ,state){
-              // if(state is UpdateCartSuccess){
-              //   bloc.add(FetchListCart());
-              // }
-              print(state.status);
+              if(state.status == CartStatus.updateSuccess){
+                bloc.add(FetchListCart());
+              }
             },
             builder: (context, state) {
-              if(state.status == CartStatus.fetchCartSuccess){
+              if(state.status == CartStatus.success){
                 if(state.cartModel != null && state.cartModel!.items != null){
                   return Column(
                     children: [
@@ -123,7 +122,7 @@ class _CartScreenContainerState extends State<CartScreenContainer> {
                 }
               }else if (state.status == CartStatus.failure){
                 return Center(child: Text(state.message!));
-              }else if (state.status == CartStatus){
+              }else if (state.status == CartStatus.loading){
                 return Center(child: LoadingWidget());
               }
               return SizedBox();
