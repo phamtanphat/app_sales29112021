@@ -10,6 +10,7 @@ import 'package:provider/provider.dart';
 
 import 'cart_bloc.dart';
 import 'cart_event.dart';
+import 'cart_state.dart';
 
 class CartScreen extends StatefulWidget {
   @override
@@ -73,15 +74,16 @@ class _CartScreenContainerState extends State<CartScreenContainer> {
         ),
         body: Container(
           constraints: BoxConstraints.expand(),
-          child: BlocConsumer<CartBloc,CartStateBase>(
+          child: BlocConsumer<CartBloc,CartState>(
             bloc: bloc,
             listener: (context ,state){
-              if(state is UpdateCartSuccess){
-                bloc.add(FetchListCart());
-              }
+              // if(state is UpdateCartSuccess){
+              //   bloc.add(FetchListCart());
+              // }
+              print(state.status);
             },
             builder: (context, state) {
-              if(state is FetchCartSuccess){
+              if(state.status == CartStatus.fetchCartSuccess){
                 if(state.cartModel != null && state.cartModel!.items != null){
                   return Column(
                     children: [
@@ -119,9 +121,9 @@ class _CartScreenContainerState extends State<CartScreenContainer> {
                 }else{
                   return Center(child: Text("Ban chua co san pham nao"));
                 }
-              }else if (state is FetchCartError){
-                return Center(child: Text(state.message));
-              }else if (state is CartLoading){
+              }else if (state.status == CartStatus.failure){
+                return Center(child: Text(state.message!));
+              }else if (state.status == CartStatus){
                 return Center(child: LoadingWidget());
               }
               return SizedBox();

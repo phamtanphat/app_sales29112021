@@ -6,69 +6,69 @@ import 'package:app_sales29112021/presentation/features/cart/cart_state.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class CartBloc extends Bloc<CartEventBase,CartStateBase>{
+class CartBloc extends Bloc<CartEventBase,CartState>{
 
   late CartRepository _cartRepository;
 
-  CartBloc(CartRepository repository) : super(CartInit()){
+  CartBloc(CartRepository repository) : super(CartState.initial()){
     _cartRepository = repository;
 
     on<FetchListCart>((event, emit) async{
       try{
-        emit(CartLoading());
+        emit(CartState.cartLoading());
         Response response = await _cartRepository.fetchListCart();
         if(response.statusCode == 200){
           if(response.data["data"] != null){
              CartModel cartModel = CartModel.fromJson(response.data["data"]);
-             emit(FetchCartSuccess(cartModel: cartModel));
+             emit(CartState.fetchCartSuccess(cartModel: cartModel));
           }else{
-            emit(FetchCartSuccess(cartModel: null));
+            emit(CartState.fetchCartSuccess(cartModel: null));
           }
         }
       }on DioError catch(dioError){
         if(dioError.response != null){
-          emit(FetchCartError(message: dioError.response!.data["message"]));
+          emit(CartState.cartError(message: dioError.response!.data["message"]));
         }
       }catch(e){
-        emit(FetchCartError(message: e.toString()));
+        emit(CartState.cartError(message: e.toString()));
       }
     });
-    on<UpdateCart>((event, emit) async{
-      try{
-        emit(CartLoading());
-        Response response = await _cartRepository.updateItemCart(event.orderId, event.foodId, event.quantity);
-        if(response.statusCode == 200){
-          emit(UpdateCartSuccess());
-        }
-      }on DioError catch(dioError){
-        if(dioError.response != null){
-          emit(UpdateCartError(message: dioError.response!.data["message"]));
-        }
-      }catch(e){
-        emit(UpdateCartError(message: e.toString()));
-      }
-    });
-
-    on<DeleteItemCart>((event, emit) async{
-      try{
-        emit(CartLoading());
-        Response response = await _cartRepository.deleteItemCart(event.foodId);
-        if(response.statusCode == 200){
-          if(response.data["data"] != null){
-            CartModel cartModel = CartModel.fromJson(response.data["data"]);
-            emit(FetchCartSuccess(cartModel: cartModel));
-          }else{
-            emit(FetchCartSuccess(cartModel: null));
-          }
-        }
-      }on DioError catch(dioError){
-        if(dioError.response != null){
-          emit(FetchCartError(message: dioError.response!.data["message"]));
-        }
-      }catch(e){
-        emit(FetchCartError(message: e.toString()));
-      }
-    });
+    // on<UpdateCart>((event, emit) async{
+    //   try{
+    //     emit(CartState.cartLoading());
+    //     Response response = await _cartRepository.updateItemCart(event.orderId, event.foodId, event.quantity);
+    //     if(response.statusCode == 200){
+    //       emit(state.copyWith(loading: false));
+    //     }
+    //   }on DioError catch(dioError){
+    //     if(dioError.response != null){
+    //       emit(state.copyWith(loading: false,message: dioError.response!.data["message"]));
+    //     }
+    //   }catch(e){
+    //     emit(state.copyWith(loading: false,message: e.toString()));
+    //   }
+    // });
+    //
+    // on<DeleteItemCart>((event, emit) async{
+    //   try{
+    //     emit(state.copyWith(loading: true));
+    //     Response response = await _cartRepository.deleteItemCart(event.foodId);
+    //     if(response.statusCode == 200){
+    //       if(response.data["data"] != null){
+    //         CartModel cartModel = CartModel.fromJson(response.data["data"]);
+    //         emit(state.copyWith(loading : false ,cartModel: cartModel));
+    //       }else{
+    //         emit(state.copyWith(loading : false ,cartModel: null));
+    //       }
+    //     }
+    //   }on DioError catch(dioError){
+    //     if(dioError.response != null){
+    //       emit(state.copyWith(loading : false ,message: dioError.response!.data["message"]));
+    //     }
+    //   }catch(e){
+    //     emit(state.copyWith(loading : false ,message: e.toString()));
+    //   }
+    // });
   }
 
 }

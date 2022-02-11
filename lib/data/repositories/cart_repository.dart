@@ -21,4 +21,9 @@ class CartRepository{
     return _api.deleteItemCart(foodId);
   }
 
+  Future<Response> confirm(String orderId){
+    return _api.confirm(orderId);
+  }
+
+
 }

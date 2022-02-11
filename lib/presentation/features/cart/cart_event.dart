@@ -33,3 +33,14 @@ class DeleteItemCart extends CartEventBase {
   List<Object?> get props => [foodId];
 
 }
+
+class Confirm extends CartEventBase {
+
+  late String orderId;
+
+  Confirm({required this.orderId});
+
+  @override
+  List<Object?> get props => [orderId];
+
+}

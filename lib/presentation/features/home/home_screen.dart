@@ -153,7 +153,6 @@ class _HomeScreenContainerState extends State<HomeScreenContainer> {
       ),
     );
   }
-
   Widget _buildItemFood(FoodModel foodModel) {
     return Container(
       height: 135,
