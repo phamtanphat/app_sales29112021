@@ -68,6 +68,22 @@ class CartBloc extends Bloc<CartEventBase,CartState>{
         emit(CartState.deleteItemError(message: e.toString()));
       }
     });
+
+    on<Confirm>((event, emit) async{
+      try{
+        emit(CartState.cartLoading());
+        Response response = await _cartRepository.confirm(event.orderId);
+        if(response.statusCode == 200){
+          emit(CartState.confirmSuccess());
+        }
+      }on DioError catch(dioError){
+        if(dioError.response != null){
+          emit(CartState.confirmError(message: dioError.response!.data["message"]));
+        }
+      }catch(e){
+        emit(CartState.confirmError(message: e.toString()));
+      }
+    });
   }
 
 }

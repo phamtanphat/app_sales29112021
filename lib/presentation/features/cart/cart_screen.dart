@@ -80,6 +80,10 @@ class _CartScreenContainerState extends State<CartScreenContainer> {
               if(state.status == CartStatus.updateSuccess){
                 bloc.add(FetchListCart());
               }
+              if(state.status == CartStatus.confirmSuccess){
+                ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Dat hang thanh cong")));
+                Navigator.pop(context);
+              }
             },
             builder: (context, state) {
               if(state.status == CartStatus.success){
@@ -107,7 +111,9 @@ class _CartScreenContainerState extends State<CartScreenContainer> {
                           margin: EdgeInsets.only(bottom: 10),
                           padding: EdgeInsets.all(10),
                           child: ElevatedButton(
-                            onPressed: () {},
+                            onPressed: () {
+                              bloc.add(Confirm(orderId: orderId));
+                            },
                             style: ButtonStyle(
                                 backgroundColor:
                                 MaterialStateProperty.all(Colors.deepOrange)),
